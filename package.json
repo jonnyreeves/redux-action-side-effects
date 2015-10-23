@@ -1,0 +1,29 @@
+{
+  "name": "redux-action-side-effects",
+  "version": "0.9.0",
+  "description": "Add side effects to your actions",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "rimraf lib && babel src --out-dir lib",
+    "test": "eslint src test && mocha --compilers js:babel/register  --require ./test/__init__.js --recursive"
+  },
+  "author": "Jonny Reeves <github@jonnyreeves.co.uk>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonnyreeves/redux-action-side-effects.git"
+  },
+  "keywords": [
+    "redux",
+    "redux-middleware"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "chai": "^3.4.0",
+    "chai-spies": "^0.7.1",
+    "eslint": "^1.7.3",
+    "mocha": "^2.3.3",
+    "redux": "^3.0.3",
+    "rimraf": "^2.4.3"
+  }
+}

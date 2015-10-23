@@ -1,0 +1,15 @@
+{
+  "extends": "eslint:recommended",
+  "parser": "espree",
+  "ecmaFeatures": {
+    "experimentalObjectRestSpread": true,
+    "modules": true
+  },
+  "env": {
+    "es6": true,
+    "mocha": true
+  },
+  "rules": {
+    "semi": [2, "always"]
+  }
+}
