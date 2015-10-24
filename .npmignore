@@ -1,0 +1,5 @@
+# Required, otherwise NPM will ignore everything in .gitignore, including the
+# lib/ folder...
+
+/.gitignore
+/.npmignore
