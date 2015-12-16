@@ -58,4 +58,29 @@ const store = compose(
 `processSideEffects` should be the last store enhancer in your chain (or at least come after any store processors which delay, or detain actions) to ensure side-effects are processed after an action has been reduced.
 
 ## Implementation
-Side effects are store in an action's `meta.sideEffects` property as an Array of functions.  Each side effect is invoked in order.
+Side effects are store in an action's `meta.sideEffects` property as an Array of functions.  Each side effect is invoked in order with the store's `dispatch` function which can be used to dispatch other actions.
+
+### Example Usage
+The following example shows how we can handle a common use-case example; showing a spinner whilst an API call is made and dismissing it afterwards.
+
+```js
+import { CALL_API } from 'redux-api-middleware';
+import { withSideEffect } from 'redux-action-side-effects';
+
+function fetchUser(userId) {
+  return {
+    [CALL_API]: {
+      endpoint: `http://example.org/users/${userId}`,
+      method: 'GET',
+      types: [
+        { type: 'SHOW_SPINNER' },
+        withSideEffect(
+          { type: 'FETCH_USER_SUCCESS', payload: response },
+          (dispatch) => dispatch({ type: 'HIDE_SPINNER' })
+        ),
+        { type: 'FETCH_USER_ERROR' },
+      ]
+    }
+  };
+}
+```

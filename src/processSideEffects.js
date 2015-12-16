@@ -25,7 +25,7 @@ export default function processSideEffects(next) {
       const { meta: { sideEffects } = {} } = lastAction;
 
       if (Array.isArray(sideEffects)) {
-        sideEffects.concat().forEach(sideEffect => sideEffect());
+        sideEffects.concat().forEach(sideEffect => sideEffect(store.dispatch));
       }
     });
 

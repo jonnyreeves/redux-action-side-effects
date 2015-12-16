@@ -1,6 +1,6 @@
 {
   "name": "redux-action-side-effects",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Add side effects to your actions",
   "main": "lib/index.js",
   "scripts": {

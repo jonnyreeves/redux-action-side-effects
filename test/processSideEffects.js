@@ -72,7 +72,6 @@ describe('processSideEffects', () => {
         done(e);
       }
     }, 0);
-
   });
 
   it('should execute all of the action\'s sideEffects', (done) => {
@@ -97,6 +96,27 @@ describe('processSideEffects', () => {
         done(e);
       }
     }, 0);
+  });
 
+  it('should pass the store\'s dispatch method through to an action\'s sideEffect', (done) => {
+    const sideEffectSpy = chai.spy();
+
+    const action = newAction({
+      meta: {
+        sideEffects: [ sideEffectSpy ]
+      }
+    });
+
+    enhancedStore.dispatch(action);
+
+    setTimeout(() => {
+      try {
+        expect(sideEffectSpy).to.have.been.called.with(enhancedStore.dispatch);
+        done();
+      }
+      catch(e) {
+        done(e);
+      }
+    }, 0);
   });
 });

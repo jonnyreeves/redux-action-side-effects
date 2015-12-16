@@ -1,5 +1,8 @@
 {
   "extends": "../.eslintrc",
+  "env": {
+    "mocha": true
+  },
   "globals": {
     "setTimeout": true
   }
