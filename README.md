@@ -6,7 +6,7 @@ npm install --save redux-action-side-effects
 ```
 
 ## What's a side effect?
-A side effect is a function which is invoked as a result of an action being reduced.
+A side effect is a function which is invoked or an another action which is dispatched as a result of an original action being reduced.
 
 ```js
 import { withSideEffects } from 'redux-action-side-effects';
@@ -14,16 +14,20 @@ import { withSideEffects } from 'redux-action-side-effects';
 // Create an action as per usual.
 const action = someAction();
 
+// Optionally, create an action which would be dispatched after an original action being reduced.
+const actionHasBeenReducedAction = someAnotherAction();
+
 // Tag it with a side-effect. Note that a new action is returned; the original
 // action is not mutated.
 const actionWithSideEffect = withSideEffects(
   action,
-  () => console.log('action reduced!')
+  () => console.log('action reduced!'),
+  actionHasBeenReducedAction
 );
 ```
 
 ## Motivation
-Sometimes you need to invoke logic after the store's state has been modified (typically in stateful middleware).  As middleware can be asynchronous, it may cause issues to depend on the following pattern as there is no guarantee that the next piece of middleware will have not have deferred, or detained the action.
+Sometimes you need to invoke logic or dispatch another action after the store's state has been modified (typically in stateful middleware).  As middleware can be asynchronous, it may cause issues to depend on the following pattern as there is no guarantee that the next piece of middleware will have not have deferred, or detained the action.
 
 ```js
 function customMiddleware() {
@@ -77,6 +81,30 @@ function fetchUser(userId) {
         withSideEffect(
           { type: 'FETCH_USER_SUCCESS', payload: response },
           (dispatch) => dispatch({ type: 'HIDE_SPINNER' })
+        ),
+        { type: 'FETCH_USER_ERROR' },
+      ]
+    }
+  };
+}
+```
+
+Same example using HIDE_SPINNER action as a plain javascript object.
+
+```js
+import { CALL_API } from 'redux-api-middleware';
+import { withSideEffect } from 'redux-action-side-effects';
+
+function fetchUser(userId) {
+  return {
+    [CALL_API]: {
+      endpoint: `http://example.org/users/${userId}`,
+      method: 'GET',
+      types: [
+        { type: 'SHOW_SPINNER' },
+        withSideEffect(
+          { type: 'FETCH_USER_SUCCESS', payload: response },
+          { type: 'HIDE_SPINNER' }
         ),
         { type: 'FETCH_USER_ERROR' },
       ]
