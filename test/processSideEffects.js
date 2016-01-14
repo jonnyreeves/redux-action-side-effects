@@ -119,4 +119,55 @@ describe('processSideEffects', () => {
       }
     }, 0);
   });
+  
+  it('should dispatch sideEffects action', (done) => {
+    const sideEffectAction = newAction();
+
+    const action = newAction({
+      meta: {
+        sideEffects: [ sideEffectAction ]
+      }
+    });
+
+    enhancedStore.dispatch(action);
+
+    setTimeout(() => {
+      try {
+        expect(nextStoreDispatchSpy).to.have.been.called.exactly(2);
+        expect(nextStoreDispatchSpy).to.have.been.called.with(action);
+        expect(nextStoreDispatchSpy).to.have.been.called.with(sideEffectAction);
+        done();
+      }
+      catch(e) {
+        done(e);
+      }
+    }, 0);
+  });
+
+  it('should execute all of the action\'s sideEffects and dispatch sideEffects actions', (done) => {
+    const firstSideEffectSpy = chai.spy();
+    const secondSideEffectAction = newAction();
+
+    const action = newAction({
+      meta: {
+        sideEffects: [ firstSideEffectSpy, secondSideEffectAction ]
+      }
+    });
+
+    enhancedStore.dispatch(action);
+
+    setTimeout(() => {
+      try {
+        expect(firstSideEffectSpy).to.have.been.called.exactly(1);
+        expect(nextStoreDispatchSpy).to.have.been.called.exactly(2);
+        expect(nextStoreDispatchSpy).to.have.been.called.with(action);
+        expect(nextStoreDispatchSpy).to.have.been.called.with(secondSideEffectAction);
+        done();
+      }
+      catch(e) {
+        done(e);
+      }
+    }, 0);
+  });
+
 });
